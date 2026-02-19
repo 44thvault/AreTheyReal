@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Are They Real? - Online Romance Scam Checker</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #1B2A4A;
+    --blue: #2E5090;
+    --sky: #E8F0FE;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --gold: #D4930D;
+    --gold-light: #FFF3D6;
+    --red: #C0392B;
+    --red-light: #FDEDEC;
+    --red-bg: #F9E0DE;
+    --green: #1E7E34;
+    --green-light: #E8F5E9;
+    --orange: #D4730D;
+    --orange-light: #FFF0E0;
+    --text: #1a1a2e;
+    --text-light: #4a4a5a;
+    --shadow: 0 4px 24px rgba(27,42,74,0.10);
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Sans 3', Georgia, serif;
+    background: var(--cream);
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+    font-weight: 900; font-size: 16px; margin-right: 6px;
+    vertical-align: middle; flex-shrink: 0;
+  }
+  .icon-shield { background: #D6EAF8; color: #1B4F72; }
+  .icon-quiz { background: #E8DAEF; color: #6C3483; }
+  .icon-search { background: #FEF9E7; color: #7D6608; }
+  .icon-warn { background: #FDEDEC; color: #C0392B; }
+  .icon-phone { background: #E8F8F5; color: #1E8449; }
+  .icon-heart { background: #FADBD8; color: #C0392B; }
+  .icon-mask { background: #D6EAF8; color: #2E5090; }
+  .icon-money { background: #FEF9E7; color: #B7950B; }
+  .icon-lg { width: 52px; height: 52px; font-size: 24px; border-radius: 14px; margin-bottom: 12px; }
+
+  header {
+    background: var(--navy); color: white; padding: 28px 24px;
+    text-align: center; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  header h1 {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px;
+  }
+  header h1 span { color: #F0C040; }
+  header p { font-size: 18px; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+  .tabs {
+    display: flex; justify-content: center; gap: 12px; padding: 20px 16px;
+    background: var(--sky); border-bottom: 2px solid #ccd9f0; flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: 'Source Sans 3', sans-serif; font-size: 19px; font-weight: 700;
+    padding: 14px 28px; border: 3px solid var(--blue); border-radius: 50px;
+    background: white; color: var(--blue); cursor: pointer; transition: all 0.2s;
+    min-width: 160px; display: inline-flex; align-items: center;
+    justify-content: center; gap: 8px;
+  }
+  .tab-btn:hover { background: #d6e4fa; }
+  .tab-btn.active { background: var(--blue); color: white; box-shadow: 0 4px 16px rgba(46,80,144,0.3); }
+  .tab-btn.active .tab-icon { background: rgba(255,255,255,0.25); color: white; }
+  .tab-btn:focus-visible { outline: 4px solid var(--gold); outline-offset: 3px; }
+  .tab-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 7px; font-weight: 900;
+    font-size: 14px; background: #d6e4fa; color: var(--blue); flex-shrink: 0;
+  }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 32px 20px 60px; }
+  .page { display: none; animation: fadeUp 0.4s ease; }
+  .page.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: white; border-radius: var(--radius); padding: 32px;
+    margin-bottom: 24px; box-shadow: var(--shadow); border-left: 6px solid var(--blue);
+  }
+  .card h2 { font-family: 'Merriweather', serif; font-size: 26px; color: var(--navy); margin-bottom: 12px; }
+  .card h3 { font-family: 'Merriweather', serif; font-size: 22px; color: var(--navy); margin-bottom: 10px; }
+
+  .intro-highlight {
+    background: var(--gold-light); border: 2px solid var(--gold); border-radius: 12px;
+    padding: 20px 24px; margin: 20px 0; font-size: 20px; font-weight: 600;
+    color: #6B4700; line-height: 1.6;
+  }
+  .feature-row {
+    display: flex; align-items: flex-start; gap: 14px; margin: 18px 0;
+    padding: 14px 18px; background: var(--sky); border-radius: 12px;
+  }
+  .feature-row .icon { margin-top: 2px; }
+  .feature-row p { margin: 0; }
+
+  .question-block {
+    background: white; border-radius: var(--radius); padding: 28px 32px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border-left: 6px solid var(--blue);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .question-block.answered-yes { border-left-color: var(--red); background: #fffafa; }
+  .question-block.answered-no { border-left-color: var(--green); background: #fafffa; }
+  .question-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--blue); color: white; font-weight: 700; font-size: 16px;
+    width: 36px; height: 36px; border-radius: 50%; margin-bottom: 10px;
+  }
+  .question-category {
+    display: inline-block; font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; padding: 4px 12px;
+    border-radius: 20px; margin-left: 10px; vertical-align: middle;
+  }
+  .cat-romance { background: #FCE4EC; color: #AD1457; }
+  .cat-identity { background: #E3F2FD; color: #1565C0; }
+  .cat-financial { background: #FFF3E0; color: #E65100; }
+  .question-text { font-size: 22px; font-weight: 600; color: var(--navy); margin: 12px 0 16px; line-height: 1.5; }
+  .question-help { font-size: 17px; color: var(--text-light); margin-bottom: 16px; font-style: italic; }
+
+  .answer-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .answer-btn {
+    font-family: 'Source Sans 3', sans-serif; font-size: 20px; font-weight: 700;
+    padding: 14px 36px; border: 3px solid #ccc; border-radius: 12px;
+    background: white; cursor: pointer; transition: all 0.2s; min-width: 120px;
+  }
+  .answer-btn:hover { border-color: var(--blue); background: var(--sky); }
+  .answer-btn:focus-visible { outline: 4px solid var(--gold); outline-offset: 2px; }
+  .answer-btn.selected-yes { background: var(--red-light); border-color: var(--red); color: var(--red); }
+  .answer-btn.selected-no { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .answer-btn.selected-unsure { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+
+  .progress-bar-wrap { background: #ddd; border-radius: 20px; height: 20px; margin-bottom: 28px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), #4A90D9); border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+  .progress-text { text-align: center; font-weight: 600; font-size: 18px; margin-bottom: 10px; color: var(--text-light); }
+
+  .result-box { border-radius: var(--radius); padding: 36px; text-align: center; margin: 24px 0; border: 3px solid; }
+  .result-box.high-risk { background: var(--red-bg); border-color: var(--red); }
+  .result-box.medium-risk { background: var(--orange-light); border-color: var(--orange); }
+  .result-box.low-risk { background: var(--green-light); border-color: var(--green); }
+  .result-icon-text {
+    font-size: 28px; font-weight: 900; margin-bottom: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 64px; height: 64px; border-radius: 50%;
+  }
+  .high-risk .result-icon-text { background: var(--red); color: white; }
+  .medium-risk .result-icon-text { background: var(--orange); color: white; }
+  .low-risk .result-icon-text { background: var(--green); color: white; }
+  .result-title { font-family: 'Merriweather', serif; font-size: 28px; font-weight: 900; margin: 12px 0 8px; }
+  .result-score { font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+  .result-detail { font-size: 20px; line-height: 1.7; text-align: left; max-width: 600px; margin: 0 auto; }
+  .result-detail li { margin-bottom: 8px; }
+
+  .submit-btn, .reset-btn {
+    font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 700;
+    padding: 18px 48px; border: none; border-radius: 14px; cursor: pointer;
+    transition: all 0.2s; display: inline-block; margin: 10px 8px;
+  }
+  .submit-btn { background: var(--blue); color: white; box-shadow: 0 4px 16px rgba(46,80,144,0.3); }
+  .submit-btn:hover { background: #24407a; transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .reset-btn { background: white; color: var(--blue); border: 3px solid var(--blue); }
+  .reset-btn:hover { background: var(--sky); }
+
+  .image-search-card { border-left-color: var(--gold); }
+  .search-links { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+  .search-link {
+    display: flex; align-items: center; gap: 16px; padding: 20px 24px;
+    background: var(--sky); border: 2px solid #b8cde8; border-radius: 14px;
+    text-decoration: none; color: var(--navy); font-size: 20px;
+    font-weight: 600; transition: all 0.2s;
+  }
+  .search-link:hover { background: #d0e0f8; border-color: var(--blue); transform: translateX(4px); }
+  .search-link:focus-visible { outline: 4px solid var(--gold); outline-offset: 2px; }
+  .search-link-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; font-weight: 900;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .search-link-text small { display: block; font-weight: 400; font-size: 16px; color: var(--text-light); margin-top: 2px; }
+
+  .step-list { counter-reset: steps; margin: 20px 0; }
+  .step-item {
+    counter-increment: steps; padding: 16px 20px 16px 70px;
+    position: relative; margin-bottom: 12px; background: var(--sky);
+    border-radius: 12px; font-size: 19px;
+  }
+  .step-item::before {
+    content: counter(steps); position: absolute; left: 18px; top: 14px;
+    width: 38px; height: 38px; line-height: 38px; text-align: center;
+    background: var(--blue); color: white; border-radius: 50%;
+    font-weight: 700; font-size: 18px;
+  }
+
+  .warning-card { border-left-color: var(--red); margin-bottom: 20px; }
+  .warning-list { margin-top: 14px; padding-left: 24px; }
+  .warning-list li { margin-bottom: 10px; font-size: 19px; line-height: 1.6; }
+
+  .resource-link {
+    display: block; padding: 18px 24px; background: var(--sky);
+    border: 2px solid #b8cde8; border-radius: 14px; margin-bottom: 14px;
+    text-decoration: none; color: var(--navy); font-size: 20px;
+    font-weight: 600; transition: all 0.2s;
+  }
+  .resource-link:hover { background: #d0e0f8; border-color: var(--blue); }
+  .resource-link small { display: block; font-weight: 400; font-size: 16px; color: var(--text-light); margin-top: 4px; }
+
+  .premium-banner {
+    background: linear-gradient(135deg, #1B2A4A 0%, #2E5090 100%);
+    color: white; border-radius: var(--radius); padding: 32px;
+    margin-bottom: 24px; text-align: center;
+    box-shadow: 0 6px 30px rgba(27,42,74,0.2); border: none;
+  }
+  .premium-banner h2 { color: #F0C040; font-family: 'Merriweather', serif; font-size: 26px; margin-bottom: 8px; }
+  .premium-banner p { font-size: 18px; opacity: 0.9; margin-bottom: 16px; }
+  .price-tag {
+    display: inline-block; background: #F0C040; color: #1B2A4A;
+    font-size: 28px; font-weight: 900; padding: 12px 36px;
+    border-radius: 12px; margin: 10px 0 16px;
+  }
+  .price-tag small { font-size: 16px; font-weight: 600; }
+  .premium-features { text-align: left; max-width: 500px; margin: 0 auto 20px; font-size: 18px; }
+  .premium-features div { padding: 6px 0; display: flex; align-items: center; gap: 10px; }
+  .check-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; background: #2ECC71; color: white;
+    border-radius: 50%; font-size: 14px; font-weight: 900; flex-shrink: 0;
+  }
+  .premium-btn {
+    font-family: 'Source Sans 3', sans-serif; font-size: 22px; font-weight: 700;
+    padding: 18px 48px; background: #F0C040; color: #1B2A4A;
+    border: none; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .premium-btn:hover { background: #e6b530; transform: translateY(-1px); }
+
+  /* Report preview box */
+  .report-preview {
+    background: white; border: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 28px; margin: 20px 0; text-align: left;
+  }
+  .report-preview h3 { color: var(--navy); margin-bottom: 16px; }
+  .report-section {
+    padding: 12px 16px; margin-bottom: 10px; border-radius: 10px;
+    background: var(--sky); font-size: 17px;
+  }
+  .report-section strong { color: var(--navy); }
+  .locked-overlay {
+    position: relative; overflow: hidden;
+  }
+  .locked-overlay::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 120px; background: linear-gradient(transparent, white);
+    pointer-events: none;
+  }
+  .lock-message {
+    text-align: center; padding: 24px; background: var(--gold-light);
+    border: 2px dashed var(--gold); border-radius: 12px; margin-top: -20px;
+    position: relative; z-index: 2;
+  }
+
+  footer {
+    text-align: center; padding: 32px 20px; font-size: 16px;
+    color: var(--text-light); border-top: 2px solid #e0d8cc;
+    max-width: 820px; margin: 0 auto;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 20px 14px 40px; }
+    .card, .question-block { padding: 22px 18px; }
+    .answer-btns { flex-direction: column; }
+    .answer-btn { width: 100%; text-align: center; }
+    .tab-btn { min-width: 130px; padding: 12px 18px; font-size: 17px; }
+    .tabs { gap: 8px; padding: 14px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Are They <span>Real</span>?</h1>
+  <p>A free tool to help you check if an online relationship is genuine - or a scam.</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" onclick="showPage('home')" role="tab" aria-selected="true"><span class="tab-icon">H</span> Home</button>
+  <button class="tab-btn" onclick="showPage('quiz')" role="tab"><span class="tab-icon">Q</span> Quiz</button>
+  <button class="tab-btn" onclick="showPage('image')" role="tab"><span class="tab-icon">S</span> Photo Check</button>
+  <button class="tab-btn" onclick="showPage('signs')" role="tab"><span class="tab-icon">!</span> Warning Signs</button>
+  <button class="tab-btn" onclick="showPage('resources')" role="tab"><span class="tab-icon">?</span> Get Help</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="card">
+    <span class="icon icon-shield icon-lg">S</span>
+    <h2>Welcome - You Are Taking A Smart Step</h2>
+    <p>Meeting people online can be wonderful, but unfortunately, some people use the internet to take advantage of others. <strong>Romance scams</strong> cost Americans over $1.3 billion every year.</p>
+    <div class="intro-highlight">
+      <strong>This tool is here to help you.</strong> It will not judge you. It will simply ask you some questions about your online relationship and help you spot possible warning signs.
+    </div>
+    <p>You can use this tool to:</p>
+    <div class="feature-row"><span class="icon icon-quiz">Q</span><p><strong>Take the Quiz</strong> - Answer simple yes/no questions about your online relationship. You will get a risk score at the end.</p></div>
+    <div class="feature-row"><span class="icon icon-search">S</span><p><strong>Check Their Photo</strong> - Learn how to do a reverse image search to see if their photo is stolen from someone else.</p></div>
+    <div class="feature-row"><span class="icon icon-warn">!</span><p><strong>Learn Warning Signs</strong> - Read about the most common tricks scammers use.</p></div>
+    <div class="feature-row"><span class="icon icon-phone">?</span><p><strong>Get Help</strong> - Find phone numbers and websites where you can report scams or talk to someone.</p></div>
+    <div style="text-align:center; margin-top: 24px;">
+      <button class="submit-btn" onclick="showPage('quiz')" style="font-size: 24px; padding: 20px 52px;">Start the Quiz Now &#9654;</button>
+    </div>
+  </div>
+  <div class="premium-banner">
+    <h2>Upgrade to Full Protection Report</h2>
+    <p>The quiz is free. After completing it, get a <strong>detailed personal safety report (PDF)</strong> you can print and share with family.</p>
+    <div class="price-tag">$4.99 <small>/ one-time</small></div>
+    <div class="premium-features">
+      <div><span class="check-mark">&#10003;</span> Personalized risk assessment with full explanation</div>
+      <div><span class="check-mark">&#10003;</span> Scam type identification (what kind of scam this matches)</div>
+      <div><span class="check-mark">&#10003;</span> Deep dive on every red flag you triggered</div>
+      <div><span class="check-mark">&#10003;</span> Step-by-step action plan for your situation</div>
+      <div><span class="check-mark">&#10003;</span> Evidence collection guide for reporting</div>
+      <div><span class="check-mark">&#10003;</span> Printable 1-page summary for family</div>
+    </div>
+    <button class="premium-btn" onclick="showPage('quiz')">Take the Free Quiz First</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="page-quiz" class="page">
+  <div class="card" style="border-left-color: var(--gold);">
+    <h2>Relationship Safety Quiz</h2>
+    <p>Answer each question honestly. This quiz is completely <strong>private</strong> - your answers are not saved or sent anywhere. They stay on your device only.</p>
+  </div>
+  <div class="progress-text" id="progress-text">Question 0 of 20 answered</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar"></div></div>
+  <div id="questions-container"></div>
+  <div style="text-align: center; margin-top: 20px;">
+    <button class="submit-btn" id="submit-quiz" onclick="showResults()" disabled>See My Results &#10003;</button>
+    <button class="reset-btn" onclick="resetQuiz()">Start Over &#8635;</button>
+  </div>
+  <div id="results-container" style="display:none;"></div>
+</div>
+
+<!-- IMAGE SEARCH -->
+<div id="page-image" class="page">
+  <div class="card image-search-card">
+    <span class="icon icon-search icon-lg">S</span>
+    <h2>Check Their Photo</h2>
+    <p>A <strong>reverse image search</strong> lets you take someone's photo and search the internet to see where else it appears. Scammers often steal photos from models, military members, or other people's social media.</p>
+    <div class="intro-highlight"><strong>If their photo shows up on many different websites under different names - that is a major red flag.</strong></div>
+  </div>
+  <div class="card image-search-card">
+    <h3>How To Do a Reverse Image Search</h3>
+    <div class="step-list">
+      <div class="step-item"><strong>Save their photo</strong> to your computer or phone. You can take a screenshot or right-click and save the image.</div>
+      <div class="step-item"><strong>Click one of the search tools below.</strong> It will open in a new window.</div>
+      <div class="step-item"><strong>Upload the photo</strong> using the camera or upload button on the search page.</div>
+      <div class="step-item"><strong>Look at the results.</strong> If the same face appears with different names or on stock photo sites, it is likely stolen.</div>
+    </div>
+  </div>
+  <div class="card image-search-card">
+    <h3>Click a Search Tool to Open It</h3>
+    <div class="search-links">
+      <a href="https://images.google.com/" target="_blank" rel="noopener" class="search-link"><span class="search-link-icon" style="background:#EA4335;color:white;">G</span><span class="search-link-text">Google Image Search<small>Click the camera icon, then upload the photo</small></span></a>
+      <a href="https://tineye.com/" target="_blank" rel="noopener" class="search-link"><span class="search-link-icon" style="background:#0095A9;color:white;">T</span><span class="search-link-text">TinEye Reverse Image Search<small>Click "Upload" and choose the photo from your device</small></span></a>
+      <a href="https://lens.google.com/" target="_blank" rel="noopener" class="search-link"><span class="search-link-icon" style="background:#4285F4;color:white;">L</span><span class="search-link-text">Google Lens<small>Drag or upload a photo to search</small></span></a>
+      <a href="https://www.labnol.org/reverse/" target="_blank" rel="noopener" class="search-link"><span class="search-link-icon" style="background:#7C4DFF;color:white;">M</span><span class="search-link-text">Search By Image (Mobile Friendly)<small>Great for phones and tablets - easy upload</small></span></a>
+    </div>
+  </div>
+</div>
+
+<!-- WARNING SIGNS -->
+<div id="page-signs" class="page">
+  <div class="card" style="border-left-color: var(--red);"><h2>Common Warning Signs of a Scam</h2><p>Scammers follow well-known patterns. If you see <strong>more than two or three</strong> of these signs, please be very careful.</p></div>
+  <div class="card warning-card">
+    <h3><span class="icon icon-heart">&#9829;</span> Romance Red Flags</h3>
+    <ul class="warning-list">
+      <li><strong>They say "I love you" very quickly</strong> - sometimes within days or weeks of meeting online.</li>
+      <li><strong>They want to move off the dating site fast</strong> - to text, WhatsApp, or email where there is less protection.</li>
+      <li><strong>They talk about a future together immediately</strong> - marriage, moving in, or visiting you.</li>
+      <li><strong>Their messages feel copied or overly poetic</strong> - scammers reuse the same scripts with many victims.</li>
+      <li><strong>They seem "too perfect"</strong> - they match all your interests and always say exactly what you want to hear.</li>
+    </ul>
+  </div>
+  <div class="card warning-card">
+    <h3><span class="icon icon-mask">ID</span> Identity Red Flags</h3>
+    <ul class="warning-list">
+      <li><strong>They refuse to do a live video call</strong> - or their camera is always "broken."</li>
+      <li><strong>Their photos look like a model</strong> - or look too professional and perfect.</li>
+      <li><strong>They claim to be military, a doctor overseas, or on an oil rig</strong> - these are the most common cover stories.</li>
+      <li><strong>They can never meet in person</strong> - there is always an excuse or emergency.</li>
+      <li><strong>Their stories do not add up</strong> - small details change or do not make sense.</li>
+    </ul>
+  </div>
+  <div class="card warning-card">
+    <h3><span class="icon icon-money">$</span> Financial Red Flags</h3>
+    <ul class="warning-list">
+      <li><strong>They ask for money for any reason</strong> - medical emergencies, plane tickets, customs fees, legal trouble.</li>
+      <li><strong>They ask you to send gift cards or cryptocurrency</strong> - these are nearly impossible to trace or recover.</li>
+      <li><strong>They share an "investment opportunity"</strong> - especially crypto or forex trading platforms.</li>
+      <li><strong>They send you money and ask you to forward it</strong> - this could make you part of a money laundering scheme.</li>
+      <li><strong>They know your banking details</strong> - or ask for account numbers, passwords, or Social Security numbers.</li>
+    </ul>
+  </div>
+  <div class="intro-highlight" style="text-align:center; margin-top: 24px;"><strong>Remember:</strong> A real person who loves you will never ask you for money before meeting you in person.</div>
+</div>
+
+<!-- RESOURCES -->
+<div id="page-resources" class="page">
+  <div class="card"><h2>Get Help and Report a Scam</h2><p>If you think you have been scammed - or if you are not sure - these organizations can help. <strong>You are not alone</strong>, and it is <strong>not your fault.</strong></p></div>
+  <div class="card">
+    <h3>Report the Scam</h3>
+    <a href="https://reportfraud.ftc.gov/" target="_blank" rel="noopener" class="resource-link">FTC - Report Fraud<small>Federal Trade Commission - Official U.S. government fraud reporting</small></a>
+    <a href="https://www.ic3.gov/" target="_blank" rel="noopener" class="resource-link">FBI IC3 - Internet Crime Complaint Center<small>File an official complaint about internet fraud</small></a>
+    <a href="https://www.aarp.org/money/scams-fraud/helpline/" target="_blank" rel="noopener" class="resource-link">AARP Fraud Helpline: 1-877-908-3360<small>Free support from trained specialists - weekdays 8am-8pm ET</small></a>
+  </div>
+  <div class="card">
+    <h3>Talk to Someone</h3>
+    <a href="tel:18779083360" class="resource-link">Call AARP Fraud Helpline: 1-877-908-3360<small>Tap to call (on mobile devices)</small></a>
+    <a href="https://www.consumer.ftc.gov/features/scam-alerts" target="_blank" rel="noopener" class="resource-link">FTC Scam Alerts<small>Stay updated on the latest scams being reported</small></a>
+  </div>
+  <div class="card">
+    <h3>Protect Yourself Going Forward</h3>
+    <div class="step-list">
+      <div class="step-item"><strong>Stop all contact</strong> with the person you suspect is a scammer. Do not tell them you are suspicious.</div>
+      <div class="step-item"><strong>Do not send any more money.</strong> If you have already sent money, contact your bank immediately.</div>
+      <div class="step-item"><strong>Save all messages and evidence</strong> - screenshots, emails, receipts. This helps investigators.</div>
+      <div class="step-item"><strong>Tell someone you trust</strong> - a family member, friend, or the helplines above. There is no shame in asking for help.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p><strong>Are They Real?</strong> is a free educational tool. It does not collect or store any of your information.</p>
+  <p style="margin-top:8px;">If you or someone you know is a victim, please contact the authorities listed on the "Get Help" page.</p>
+</footer>
+
+<script>
+// ========== DATA ==========
+var questions = [
+  { text: "Did they say 'I love you' within the first few weeks?", help: "Scammers rush emotional connection to build trust fast.", cat: "romance",
+    deep: "This tactic is called 'love bombing.' Scammers shower you with affection, compliments, and declarations of love very early to create a strong emotional bond quickly. A genuine person takes time to build real feelings. When someone professes deep love before truly knowing you, it is a manipulation tactic designed to make you feel obligated and emotionally attached.",
+    example: "A common script: 'I have never felt this way about anyone before. I know we just met, but I believe God brought us together.' This language is designed to bypass your critical thinking." },
+  { text: "Did they want to move off the dating site very quickly?", help: "They may push to use WhatsApp, email, or texting instead.", cat: "romance",
+    deep: "Dating sites have fraud detection systems that can flag suspicious accounts. Scammers want to move the conversation to private channels (WhatsApp, Google Hangouts, email, or text) where there is no oversight. Once off the platform, there is no record of the conversation and the dating site cannot protect you.",
+    example: "They might say: 'My subscription is expiring' or 'I do not check this app often, let me give you my personal number.' This creates urgency and removes safety nets." },
+  { text: "Do their messages seem overly romantic or poetic - almost like a script?", help: "Scammers often copy-paste romantic messages to multiple people.", cat: "romance",
+    deep: "Scammers operate like a business. They use pre-written romantic scripts that have been tested and refined to produce emotional responses. If their messages feel unusually eloquent, overly dramatic, or read like lines from a movie, they may be recycled text sent to dozens of victims simultaneously.",
+    example: "Try copying a sentence from one of their messages and searching for it on Google in quotes. You may find the exact same text posted on scam-reporting websites." },
+  { text: "Do they seem to share all of your interests and agree with everything you say?", help: "This is called 'mirroring' - a manipulation technique.", cat: "romance",
+    deep: "Mirroring is a well-documented manipulation technique where the scammer reflects your personality, interests, values, and beliefs back to you. This creates an artificial sense of compatibility and makes you feel like you have found your 'soulmate.' In reality, they are studying what you say and telling you exactly what you want to hear.",
+    example: "If you mention loving dogs, they suddenly have a dog. If you mention your faith, they share the same faith deeply. Every preference you reveal becomes their preference too." },
+  { text: "Have they talked about marriage, moving in, or a future together very early?", help: "Rushing commitment is a way to make you feel invested before asking for money.", cat: "romance",
+    deep: "This is called 'future faking' - making elaborate promises about a shared future that will never happen. The purpose is to make you emotionally invested so that when they eventually ask for money, you feel like you are investing in your future together rather than giving money to a stranger.",
+    example: "They may discuss wedding plans, talk about moving to your city, or say things like 'When I finally get to hold you...' These fantasies are tools to deepen your emotional commitment." },
+  { text: "Do they get upset or guilt-trip you if you question anything?", help: "Scammers may use anger or sadness to prevent you from thinking clearly.", cat: "romance",
+    deep: "When you ask logical questions or express doubt, a scammer will often respond with emotional manipulation: crying, anger, accusations of distrust, or threats to end the relationship. This is designed to make you feel guilty for being cautious and to stop you from investigating further. A genuine partner welcomes honest questions.",
+    example: "Common responses include: 'After everything I have shared with you, you still do not trust me?' or 'If you really loved me, you would not question me like this.'" },
+  { text: "Have they refused to do a live video call with you?", help: "A real person should be willing to show their face on camera.", cat: "identity",
+    deep: "This is one of the strongest indicators of a scam. If someone claims to love you but will not show their face on a live video call, there is almost certainly something wrong. Common excuses include a broken camera, bad internet, being in a location where video is not allowed, or being 'too shy.' Modern phones all have cameras and most of the world has video calling capability.",
+    example: "Test: Ask for a spontaneous video call at an unexpected time. If they always have an excuse, or if the 'video call' only shows a still image or pre-recorded video, this person is not who they claim to be." },
+  { text: "Do they claim to be in the military, working on an oil rig, or a doctor overseas?", help: "These are the most common cover stories scammers use.", cat: "identity",
+    deep: "These professions are used because they conveniently explain why the person cannot meet in person, cannot video call easily, and may have sudden financial emergencies. Military deployment, remote oil rig work, and overseas medical missions all provide built-in excuses for every red flag. Real military personnel and professionals do not typically seek romantic relationships by messaging strangers online.",
+    example: "The most impersonated identities in romance scams are: US military officers, Army doctors deployed overseas, oil rig engineers, UN workers, and international construction contractors." },
+  { text: "Do their photos look like a model or seem overly professional?", help: "Stolen photos from models or influencers are very common in scams.", cat: "identity",
+    deep: "Scammers steal attractive photos from social media accounts, modeling portfolios, or stock photo websites. If every single photo looks like it belongs in a magazine - perfect lighting, professional poses, no casual or candid shots - the images are likely stolen. Real people have a mix of polished and casual photos.",
+    example: "Use the Photo Check tab on this site to do a reverse image search. If their photos appear on multiple websites under different names, they are stolen." },
+  { text: "Have they always had an excuse for why they cannot meet in person?", help: "Emergencies, work, or travel problems that keep coming up are a red flag.", cat: "identity",
+    deep: "A scammer will never meet you in person because they are not who they claim to be. They will create an endless series of excuses: sudden work emergencies, flight cancellations, passport problems, family crises, hospital visits, or legal issues. Each excuse may sound reasonable on its own, but the pattern of constant cancellations is the red flag.",
+    example: "Watch for this cycle: they excitedly plan to visit, something 'comes up' at the last minute, and then they may even ask you for money to help with the problem that prevented the visit." },
+  { text: "Have you noticed their stories or details changing over time?", help: "Scammers juggle many victims and sometimes mix up their stories.", cat: "identity",
+    deep: "Professional scammers often communicate with dozens of victims at once. They may forget details they told you, contradict earlier statements, or confuse your conversation with someone else's. If their age, job title, family details, or life story seems to shift, it is because they are managing too many lies to keep track of.",
+    example: "Keep notes on key details they share: their birthday, number of children, hometown, where they went to school. If these change over weeks or months, you have strong evidence of deception." },
+  { text: "Did they contact you first out of the blue?", help: "While this can be normal, scammers often initiate with flattering messages.", cat: "identity",
+    deep: "While not every unsolicited message is a scam, the majority of romance scams begin with the scammer initiating contact. They may send a friend request on Facebook, a message on a dating site, or even a 'wrong number' text. The initial message is usually flattering and designed to start a conversation.",
+    example: "Common opening tactics: sending a friend request with a flattering comment about your photo, messaging on Instagram or Facebook saying 'You have a beautiful smile,' or texting pretending to have the wrong number and then continuing the conversation." },
+  { text: "Does their social media profile look new, have very few friends, or very few photos?", help: "Fake profiles are often recently created with limited content.", cat: "identity",
+    deep: "Legitimate people have social media histories that go back years with tagged photos from friends, check-ins at locations, and natural interaction patterns. Scammer profiles are typically created recently, have stock or stolen photos, very few friends (or friends who also look fake), no tagged photos from others, and minimal activity history.",
+    example: "Check when their Facebook account was created (click About > Contact and Basic Info). Look at whether friends or family members interact with their posts. A real person will have comments from people who clearly know them." },
+  { text: "Have they asked you to send money for any reason?", help: "Medical bills, plane tickets, legal fees, or customs charges are common excuses.", cat: "financial",
+    deep: "This is the ultimate goal of a romance scam - to get your money. No matter how compelling the story, a person you have never met in real life should never be asking you for money. The excuses will always sound urgent and emotional: a sick child, a legal emergency, a business deal gone wrong, or money needed to travel to see you.",
+    example: "The first request is usually small ($100-500) to test if you will send money. If you do, the amounts will escalate dramatically. Some victims lose their entire life savings over months or years." },
+  { text: "Have they asked for gift cards, wire transfers, or cryptocurrency?", help: "These payment methods are almost impossible to recover.", cat: "financial",
+    deep: "Scammers specifically request untraceable payment methods. Gift cards (iTunes, Google Play, Amazon, Steam) can be redeemed instantly and cannot be reversed. Wire transfers (Western Union, MoneyGram) go directly to the scammer and cannot be recalled. Cryptocurrency transactions are permanent and anonymous. A legitimate person asking for financial help would use normal, traceable payment methods.",
+    example: "If someone asks you to buy gift cards and read them the numbers on the back, this is a scam 100% of the time. No legitimate business, government agency, or romantic partner will ever ask for gift card payments." },
+  { text: "Have they shared an 'investment opportunity' with you?", help: "Crypto or forex scams are often disguised as relationship advice.", cat: "financial",
+    deep: "This is a rapidly growing scam type called 'pig butchering' (a term scammers use internally). The scammer builds a romantic relationship, then casually mentions they make great money through cryptocurrency or forex trading. They guide you to a fake investment platform that shows fake profits. You invest more and more, but when you try to withdraw, the money is gone.",
+    example: "Warning signs: They show screenshots of huge trading profits. They guide you to a specific trading platform or app. The platform shows your 'investments' growing. But when you try to cash out, you are told you need to pay fees or taxes first - more money going to the scammer." },
+  { text: "Have they asked for your bank account, Social Security, or personal financial information?", help: "A romantic partner would never need this information online.", cat: "financial",
+    deep: "Sharing financial information can lead to identity theft, unauthorized transactions, or being implicated in money laundering. A romantic partner - especially one you have never met - has absolutely no legitimate reason to need your bank account numbers, Social Security number, passwords, or credit card information. This information can be used to drain your accounts or open new accounts in your name.",
+    example: "They might say they want to 'send you a surprise' or 'deposit money into your account.' In reality, they may use your account to launder stolen money, making you legally complicit in their crimes." },
+  { text: "Have they sent you money and asked you to forward it somewhere?", help: "This is money laundering and could put you in legal trouble.", cat: "financial",
+    deep: "If someone sends money to your account and asks you to forward it (often keeping a percentage as your 'payment'), you are being used as a money mule. The money being sent through your account is stolen from other victims. This is a serious federal crime - money laundering - and you could face criminal prosecution even if you did not know the money was stolen.",
+    example: "Common setups: They send you a check and ask you to deposit it, keep some, and wire the rest. The check later bounces and you owe the bank the full amount. Or they transfer money to your account and ask you to buy cryptocurrency and send it to a wallet address." },
+  { text: "Do they have a financial emergency every time things are going well?", help: "Scammers create crises to keep the money flowing.", cat: "financial",
+    deep: "Notice the pattern: the relationship feels wonderful, things are going great, and then suddenly there is an urgent financial crisis. This cycle repeats because it works - when you feel emotionally connected and happy, you are most vulnerable to sending money to 'help' your partner through a crisis. The emergencies will never stop because each one that works proves you can be manipulated again.",
+    example: "The cycle typically looks like this: Period of intense romance and connection > Sudden emergency (medical, legal, travel) > Urgent request for money > Brief gratitude and more romance > Next emergency. This pattern can repeat for months or years." },
+  { text: "Have they discouraged you from telling family or friends about the relationship?", help: "Isolation makes it harder for loved ones to warn you.", cat: "financial",
+    deep: "Scammers know that your family and friends are the biggest threat to their scheme. Outside observers can see red flags that you might miss when you are emotionally involved. Scammers will discourage you from sharing details about the relationship by saying things like 'people will not understand our love' or 'your family will judge us because we met online.' This isolation is a deliberate strategy.",
+    example: "If they specifically ask you not to tell anyone about sending money, this is an extremely serious red flag. They know that any reasonable person would tell you to stop." }
+];
+
+// Scam type profiles
+var scamProfiles = {
+  military_romance: {
+    name: "Military Romance Scam",
+    description: "Your answers closely match the pattern of a Military Romance Scam. In this type of scam, the person claims to be a deployed military service member who falls in love with you online. They use the military story to explain why they cannot video call, cannot meet in person, and eventually need money for things like 'leave papers,' 'satellite phone bills,' or 'shipping personal items home.'",
+    indicators: "Claims of military service, inability to video call, requests for money for military-related expenses"
+  },
+  pig_butchering: {
+    name: "Pig Butchering Investment Scam",
+    description: "Your answers closely match the pattern of a 'Pig Butchering' scam. In this type, the scammer builds a romantic relationship while gradually introducing a fake investment opportunity (usually cryptocurrency or forex). They guide you to a fake trading platform that shows impressive fake returns, encouraging you to invest more and more money that you will never recover.",
+    indicators: "Investment or crypto recommendations, guided to specific trading platforms, shown impressive returns"
+  },
+  classic_romance: {
+    name: "Classic Romance Scam",
+    description: "Your answers match the pattern of a Classic Romance Scam. The scammer creates a fake identity, builds an intense emotional connection quickly, and then creates financial emergencies that require your help. This is the most common type of romance scam and follows a predictable cycle of love-bombing, crisis creation, and money requests.",
+    indicators: "Rapid emotional attachment, fake emergencies, repeated requests for money"
+  },
+  identity_theft: {
+    name: "Identity Theft Romance Scam",
+    description: "Your answers suggest possible Identity Theft through a romance scam. In this variation, the scammer's primary goal is to obtain your personal and financial information rather than (or in addition to) direct money transfers. They may use your information to open credit cards, take loans, or commit fraud in your name.",
+    indicators: "Requests for personal information, bank details, Social Security numbers, or asking you to forward money"
+  },
+  catfish: {
+    name: "Catfishing (Possible Scam in Early Stages)",
+    description: "Your answers suggest you may be dealing with a catfish - someone who is not who they claim to be. While not all catfishing leads to financial fraud, it often does. The person may be using stolen photos and a fake identity for emotional manipulation, and financial requests may come later as the relationship develops.",
+    indicators: "Fake photos, inability to video call, inconsistent stories, refusal to meet"
+  }
+};
+
+var catLabels = { romance: "Romance", identity: "Identity", financial: "Financial" };
+var catClass = { romance: "cat-romance", identity: "cat-identity", financial: "cat-financial" };
+var answers = [];
+for (var a = 0; a < questions.length; a++) answers.push(null);
+
+function buildQuiz() {
+  var container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  for (var i = 0; i < questions.length; i++) {
+    var q = questions[i];
+    var div = document.createElement('div');
+    div.className = 'question-block';
+    div.id = 'qblock-' + i;
+    div.innerHTML =
+      '<span class="question-number">' + (i + 1) + '</span>' +
+      '<span class="question-category ' + catClass[q.cat] + '">' + catLabels[q.cat] + '</span>' +
+      '<div class="question-text">' + q.text + '</div>' +
+      '<div class="question-help">' + q.help + '</div>' +
+      '<div class="answer-btns">' +
+        '<button class="answer-btn" onclick="answer(' + i + ',\'yes\',this)">YES</button>' +
+        '<button class="answer-btn" onclick="answer(' + i + ',\'no\',this)">NO</button>' +
+        '<button class="answer-btn" onclick="answer(' + i + ',\'unsure\',this)">NOT SURE</button>' +
+      '</div>';
+    container.appendChild(div);
+  }
+}
+
+function answer(index, value, btn) {
+  answers[index] = value;
+  var block = document.getElementById('qblock-' + index);
+  block.className = 'question-block';
+  if (value === 'yes') block.classList.add('answered-yes');
+  else if (value === 'no') block.classList.add('answered-no');
+  var btns = block.querySelectorAll('.answer-btn');
+  for (var b = 0; b < btns.length; b++) btns[b].className = 'answer-btn';
+  if (value === 'yes') btn.classList.add('selected-yes');
+  else if (value === 'no') btn.classList.add('selected-no');
+  else btn.classList.add('selected-unsure');
+  updateProgress();
+}
+
+function updateProgress() {
+  var answered = 0;
+  for (var i = 0; i < answers.length; i++) if (answers[i] !== null) answered++;
+  var pct = (answered / questions.length) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = 'Question ' + answered + ' of ' + questions.length + ' answered';
+  document.getElementById('submit-quiz').disabled = answered < questions.length;
+}
+
+function getScamProfile() {
+  var romYes = 0, idYes = 0, finYes = 0;
+  var militaryKeywords = false, investKeywords = false, infoKeywords = false;
+  for (var i = 0; i < questions.length; i++) {
+    if (answers[i] === 'yes' || answers[i] === 'unsure') {
+      if (questions[i].cat === 'romance') romYes++;
+      if (questions[i].cat === 'identity') idYes++;
+      if (questions[i].cat === 'financial') finYes++;
+    }
+  }
+  // Q7 = military claim
+  if (answers[7] === 'yes') militaryKeywords = true;
+  // Q15 = investment opportunity
+  if (answers[15] === 'yes') investKeywords = true;
+  // Q16 = asked for bank/SSN info, Q17 = forwarding money
+  if (answers[16] === 'yes' || answers[17] === 'yes') infoKeywords = true;
+
+  if (militaryKeywords && finYes >= 2) return scamProfiles.military_romance;
+  if (investKeywords) return scamProfiles.pig_butchering;
+  if (infoKeywords) return scamProfiles.identity_theft;
+  if (finYes >= 3 && romYes >= 3) return scamProfiles.classic_romance;
+  return scamProfiles.catfish;
+}
+
+function getAnalysis() {
+  var yesCount = 0, unsureCount = 0;
+  for (var i = 0; i < answers.length; i++) {
+    if (answers[i] === 'yes') yesCount++;
+    if (answers[i] === 'unsure') unsureCount++;
+  }
+  var score = yesCount + Math.round(unsureCount * 0.5);
+  var catFlags = { romance: 0, identity: 0, financial: 0 };
+  for (var j = 0; j < questions.length; j++) {
+    if (answers[j] === 'yes') catFlags[questions[j].cat]++;
+    if (answers[j] === 'unsure') catFlags[questions[j].cat] += 0.5;
+  }
+  var flaggedQuestions = [];
+  for (var k = 0; k < questions.length; k++) {
+    if (answers[k] === 'yes' || answers[k] === 'unsure') {
+      flaggedQuestions.push({ index: k, answer: answers[k], q: questions[k] });
+    }
+  }
+  return {
+    yesCount: yesCount, unsureCount: unsureCount, score: score,
+    total: questions.length, catFlags: catFlags,
+    flaggedQuestions: flaggedQuestions, profile: getScamProfile()
+  };
+}
+
+function showResults() {
+  var a = getAnalysis();
+  var level, symbol, title, msg;
+  if (a.score >= 8) {
+    level = 'high-risk'; symbol = '!!'; title = 'High Risk - Please Be Very Careful';
+    msg = 'Your answers show <strong>' + a.yesCount + ' red flags</strong> and <strong>' + a.unsureCount + ' uncertain answers</strong>. This pattern is very common in romance scams. <strong>We strongly recommend you stop sending money immediately and contact the AARP Fraud Helpline (1-877-908-3360) or the FTC.</strong>';
+  } else if (a.score >= 4) {
+    level = 'medium-risk'; symbol = '!'; title = 'Some Concerns - Stay Alert';
+    msg = 'Your answers show <strong>' + a.yesCount + ' red flags</strong> and <strong>' + a.unsureCount + ' uncertain answers</strong>. While not every warning sign means a scam, this many concerns deserve attention. Consider doing a reverse image search and talking to someone you trust.';
+  } else {
+    level = 'low-risk'; symbol = '&#10003;'; title = 'Lower Risk - But Stay Aware';
+    msg = 'Your answers show only <strong>' + a.yesCount + ' red flag(s)</strong>. That is a good sign, but always stay aware. Never send money to someone you have not met in person.';
+  }
+
+  var catBreakdown = '<h3 style="margin-top:24px; margin-bottom:12px;">Breakdown by Category:</h3><ul>';
+  if (a.catFlags.romance > 0) catBreakdown += '<li><strong>Romance red flags:</strong> ' + Math.round(a.catFlags.romance) + ' concern(s)</li>';
+  if (a.catFlags.identity > 0) catBreakdown += '<li><strong>Identity red flags:</strong> ' + Math.round(a.catFlags.identity) + ' concern(s)</li>';
+  if (a.catFlags.financial > 0) catBreakdown += '<li><strong>Financial red flags:</strong> ' + Math.round(a.catFlags.financial) + ' concern(s)</li>';
+  if (a.catFlags.romance === 0 && a.catFlags.identity === 0 && a.catFlags.financial === 0) catBreakdown += '<li>No red flags detected.</li>';
+  catBreakdown += '</ul>';
+
+  // Build report preview (locked)
+  var previewHTML = '<div class="report-preview">' +
+    '<h3>Your Full Safety Report</h3>' +
+    '<div class="report-section"><strong>Scam Type Match:</strong> ' + a.profile.name + '</div>' +
+    '<div class="report-section"><strong>Red Flags Triggered:</strong> ' + a.flaggedQuestions.length + ' questions need attention</div>' +
+    '<div class="locked-overlay">' +
+      '<div class="report-section"><strong>Deep Dive Preview:</strong> ' + (a.flaggedQuestions.length > 0 ? a.flaggedQuestions[0].q.deep.substring(0, 150) + '...' : 'No concerns found.') + '</div>' +
+      '<div class="report-section"><strong>Action Plan:</strong> Based on your risk level, your personalized steps include...</div>' +
+      '<div class="report-section"><strong>Evidence Guide:</strong> How to document and preserve...</div>' +
+    '</div>' +
+    '<div class="lock-message">' +
+      '<strong>Get your complete 8-section report as a downloadable PDF</strong><br>' +
+      '<span style="font-size:16px;color:var(--text-light);">Includes deep analysis, scam type profile, action plan, evidence guide, and a printable summary for family.</span><br><br>' +
+      '<button class="premium-btn" onclick="generatePremiumReport()">Download Full Report - $4.99</button><br>' +
+      '<span style="font-size:14px;color:var(--text-light);margin-top:8px;display:inline-block;">Secure payment via Stripe (coming soon) - Demo: click to preview the PDF</span>' +
+    '</div>' +
+  '</div>';
+
+  var container = document.getElementById('results-container');
+  container.style.display = 'block';
+  container.innerHTML =
+    '<div class="result-box ' + level + '">' +
+      '<div class="result-icon-text">' + symbol + '</div>' +
+      '<div class="result-title">' + title + '</div>' +
+      '<div class="result-score">Risk Score: ' + a.score + ' out of ' + a.total + '</div>' +
+      '<div class="result-detail"><p>' + msg + '</p>' + catBreakdown + '</div>' +
+    '</div>' + previewHTML +
+    '<div style="text-align:center; margin-top:16px;">' +
+      '<button class="submit-btn" onclick="showPage(\'image\')">Check Their Photo Next</button>' +
+      '<button class="submit-btn" onclick="showPage(\'resources\')" style="background:var(--red);">Get Help Now</button>' +
+    '</div>';
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ========== PDF REPORT GENERATION ==========
+function generatePremiumReport() {
+  var a = getAnalysis();
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  var pageW = 210, pageH = 297;
+  var marginL = 20, marginR = 20, contentW = pageW - marginL - marginR;
+  var y = 0;
+  var today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  var levelText, levelColor;
+  if (a.score >= 8) { levelText = 'HIGH RISK'; levelColor = [192, 57, 43]; }
+  else if (a.score >= 4) { levelText = 'MODERATE CONCERN'; levelColor = [212, 115, 13]; }
+  else { levelText = 'LOWER RISK'; levelColor = [30, 126, 52]; }
+
+  function checkPage(needed) {
+    if (y + needed > pageH - 25) {
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text('Are They Real? - Confidential Safety Report - ' + today, pageW / 2, pageH - 10, { align: 'center' });
+      doc.addPage();
+      y = 20;
+    }
+  }
+
+  function addSectionHeader(title) {
+    checkPage(20);
+    doc.setFillColor(27, 42, 74);
+    doc.roundedRect(marginL, y, contentW, 10, 2, 2, 'F');
+    doc.setFontSize(13);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, marginL + 5, y + 7);
+    y += 16;
+    doc.setTextColor(30, 30, 46);
+  }
+
+  function addWrappedText(text, size, style, indent) {
+    indent = indent || 0;
+    doc.setFontSize(size);
+    doc.setFont('helvetica', style || 'normal');
+    var lines = doc.splitTextToSize(text, contentW - indent);
+    for (var l = 0; l < lines.length; l++) {
+      checkPage(6);
+      doc.text(lines[l], marginL + indent, y);
+      y += size * 0.45;
+    }
+    y += 2;
+  }
+
+  function addBullet(text, size) {
+    doc.setFontSize(size || 10);
+    doc.setFont('helvetica', 'normal');
+    var lines = doc.splitTextToSize(text, contentW - 10);
+    checkPage(lines.length * 5 + 2);
+    doc.setFillColor(46, 80, 144);
+    doc.circle(marginL + 3, y - 1.2, 1.2, 'F');
+    for (var l = 0; l < lines.length; l++) {
+      doc.text(lines[l], marginL + 8, y);
+      y += 4.5;
+    }
+    y += 1;
+  }
+
+  // ===== PAGE 1: COVER =====
+  doc.setFillColor(27, 42, 74);
+  doc.rect(0, 0, pageW, 80, 'F');
+  doc.setFontSize(32);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Are They Real?', pageW / 2, 35, { align: 'center' });
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Personal Safety Report', pageW / 2, 48, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setTextColor(200, 200, 200);
+  doc.text('Confidential - Generated ' + today, pageW / 2, 60, { align: 'center' });
+  doc.text('This report is private and was not sent or stored anywhere.', pageW / 2, 67, { align: 'center' });
+
+  // Risk level badge
+  y = 95;
+  doc.setFillColor(levelColor[0], levelColor[1], levelColor[2]);
+  doc.roundedRect(marginL, y, contentW, 20, 4, 4, 'F');
+  doc.setFontSize(22);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Risk Level: ' + levelText, pageW / 2, y + 13, { align: 'center' });
+  y += 30;
+
+  doc.setTextColor(30, 30, 46);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Score: ' + a.score + ' out of ' + a.total + '  |  Red Flags: ' + a.yesCount + '  |  Uncertain: ' + a.unsureCount, pageW / 2, y, { align: 'center' });
+  y += 10;
+
+  // Category bars
+  var cats = [
+    { name: 'Romance', val: a.catFlags.romance, max: 6, color: [173, 20, 87] },
+    { name: 'Identity', val: a.catFlags.identity, max: 7, color: [21, 101, 192] },
+    { name: 'Financial', val: a.catFlags.financial, max: 7, color: [230, 81, 0] }
+  ];
+  for (var c = 0; c < cats.length; c++) {
+    var cat = cats[c];
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 46);
+    doc.text(cat.name + ': ' + Math.round(cat.val) + '/' + cat.max, marginL, y + 4);
+    // Background bar
+    doc.setFillColor(230, 230, 230);
+    doc.roundedRect(marginL + 50, y, contentW - 50, 6, 2, 2, 'F');
+    // Fill bar
+    var fillW = Math.max(1, ((cat.val / cat.max) * (contentW - 50)));
+    doc.setFillColor(cat.color[0], cat.color[1], cat.color[2]);
+    doc.roundedRect(marginL + 50, y, fillW, 6, 2, 2, 'F');
+    y += 12;
+  }
+  y += 5;
+
+  // ===== SECTION 1: SCAM TYPE PROFILE =====
+  addSectionHeader('SECTION 1: Scam Type Identification');
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(192, 57, 43);
+  addWrappedText('Matched Pattern: ' + a.profile.name, 13, 'bold');
+  doc.setTextColor(30, 30, 46);
+  addWrappedText(a.profile.description, 10, 'normal');
+  y += 2;
+  doc.setFont('helvetica', 'italic');
+  doc.setTextColor(100, 100, 100);
+  addWrappedText('Key indicators: ' + a.profile.indicators, 9, 'italic');
+  doc.setTextColor(30, 30, 46);
+  y += 5;
+
+  // ===== SECTION 2: FLAGGED QUESTIONS DEEP DIVE =====
+  addSectionHeader('SECTION 2: Red Flag Deep Dive');
+  if (a.flaggedQuestions.length === 0) {
+    addWrappedText('No red flags were triggered. This is a positive sign, but always remain cautious with online relationships.', 10, 'normal');
+  } else {
+    for (var f = 0; f < a.flaggedQuestions.length; f++) {
+      var fq = a.flaggedQuestions[f];
+      checkPage(30);
+      // Flag header
+      doc.setFillColor(253, 237, 236);
+      doc.roundedRect(marginL, y, contentW, 8, 2, 2, 'F');
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(192, 57, 43);
+      var answerLabel = fq.answer === 'yes' ? '[YES]' : '[NOT SURE]';
+      doc.text(answerLabel + ' Q' + (fq.index + 1) + ': ' + fq.q.text.substring(0, 80), marginL + 3, y + 5.5);
+      y += 12;
+      doc.setTextColor(30, 30, 46);
+      addWrappedText(fq.q.deep, 9.5, 'normal', 3);
+      y += 1;
+      doc.setFont('helvetica', 'italic');
+      doc.setTextColor(80, 80, 80);
+      addWrappedText('Real-world example: ' + fq.q.example, 9, 'italic', 3);
+      doc.setTextColor(30, 30, 46);
+      y += 4;
+    }
+  }
+
+  // ===== SECTION 3: ACTION PLAN =====
+  addSectionHeader('SECTION 3: Your Personalized Action Plan');
+  if (a.score >= 8) {
+    addWrappedText('Based on your HIGH RISK result, we recommend the following steps immediately:', 10, 'bold');
+    y += 2;
+    addBullet('STOP all financial transactions with this person immediately. Do not send any more money, gift cards, or cryptocurrency under any circumstances.');
+    addBullet('DO NOT alert the scammer that you are suspicious. They may escalate pressure, create new emergencies, or attempt to manipulate you emotionally.');
+    addBullet('CONTACT your bank or financial institution right away. Tell them you may be a victim of fraud. Ask about reversing recent transactions.');
+    addBullet('CALL the AARP Fraud Helpline at 1-877-908-3360 (free, weekdays 8am-8pm ET). Trained specialists can walk you through next steps.');
+    addBullet('FILE a report with the FTC at reportfraud.ftc.gov and the FBI IC3 at ic3.gov.');
+    addBullet('TELL a trusted family member or friend. You need support, and there is absolutely no shame in being targeted by professional criminals.');
+    addBullet('SAVE all messages, emails, transaction records, and screenshots as evidence before blocking the person.');
+    addBullet('BLOCK the person on all platforms only after you have saved all evidence.');
+  } else if (a.score >= 4) {
+    addWrappedText('Based on your MODERATE CONCERN result, we recommend the following steps:', 10, 'bold');
+    y += 2;
+    addBullet('DO NOT send any money to this person for any reason until you have verified their identity beyond any doubt.');
+    addBullet('REQUEST a live video call. A real person will agree. If they refuse or make excuses, this is a very strong indicator of a scam.');
+    addBullet('DO a reverse image search on their photos using the tools on the Photo Check page of this website.');
+    addBullet('TALK to a trusted friend or family member about the relationship. Share the details and listen to their honest opinion.');
+    addBullet('VERIFY their identity independently. Search their name, look up their claimed employer, and check if their story checks out.');
+    addBullet('CALL the AARP Fraud Helpline at 1-877-908-3360 if you have any doubts. They can help you evaluate the situation.');
+    addBullet('KEEP records of all your communications in case you need them later.');
+  } else {
+    addWrappedText('Based on your LOWER RISK result, here are some best practices to keep yourself safe:', 10, 'bold');
+    y += 2;
+    addBullet('NEVER send money to someone you have not met in person, no matter how strong the connection feels.');
+    addBullet('ALWAYS do a video call before investing significant emotional energy in an online relationship.');
+    addBullet('KEEP your personal and financial information private until you have met in person multiple times.');
+    addBullet('TELL friends or family about the relationship. A second opinion from someone who cares about you is invaluable.');
+    addBullet('TRUST your instincts. If something feels off, it probably is.');
+    addBullet('MEET in a public place for your first in-person meeting and tell someone where you will be.');
+  }
+
+  // ===== SECTION 4: EVIDENCE COLLECTION GUIDE =====
+  addSectionHeader('SECTION 4: Evidence Collection Guide');
+  addWrappedText('If you decide to report this person, having organized evidence will significantly help investigators. Here is what to save:', 10, 'normal');
+  y += 3;
+  addBullet('SCREENSHOTS of all conversations - include timestamps and the full chat window showing their profile name/photo.');
+  addBullet('THEIR PROFILE - screenshot their dating profile, social media profile, and any other accounts. Include the URL if possible.');
+  addBullet('PHOTOS they sent you - save every photo to a folder. These can be used for reverse image searches by investigators.');
+  addBullet('FINANCIAL RECORDS - bank statements, wire transfer receipts, gift card purchase receipts, cryptocurrency transaction IDs.');
+  addBullet('EMAIL HEADERS - if you communicated by email, the full headers contain technical information that can help trace the scammer.');
+  addBullet('PHONE NUMBERS and EMAIL ADDRESSES they used - write down every number and email, even ones they told you to discard.');
+  addBullet('TIMELINE - write a simple chronological summary: when you first connected, key events, and every time money was requested or sent.');
+  y += 3;
+  addWrappedText('Store all evidence in a folder on your computer or print it out. Do not delete any messages until investigators tell you it is safe to do so.', 10, 'italic');
+
+  // ===== SECTION 5: RESOURCE DIRECTORY =====
+  addSectionHeader('SECTION 5: Resource Directory');
+  addWrappedText('REPORT THE SCAM:', 10, 'bold');
+  addBullet('FTC (Federal Trade Commission): reportfraud.ftc.gov');
+  addBullet('FBI IC3 (Internet Crime Complaint Center): ic3.gov');
+  addBullet('Your local police department - file a report in person');
+  y += 3;
+  addWrappedText('GET SUPPORT:', 10, 'bold');
+  addBullet('AARP Fraud Helpline: 1-877-908-3360 (free, weekdays 8am-8pm ET)');
+  addBullet('FTC Consumer Hotline: 1-877-382-4357');
+  addBullet('National Elder Fraud Hotline: 1-833-FRAUD-11 (1-833-372-8311)');
+  y += 3;
+  addWrappedText('FINANCIAL RECOVERY:', 10, 'bold');
+  addBullet('Contact your bank or credit card company immediately to report fraud');
+  addBullet('If you sent a wire transfer: contact Western Union (1-800-448-1492) or MoneyGram (1-800-926-9400) to request a recall');
+  addBullet('If you sent gift cards: contact the gift card company with the card numbers to attempt a freeze');
+  addBullet('If you sent cryptocurrency: file a report with ic3.gov - recovery is rare but possible in some cases');
+
+  // ===== SECTION 6: SHAREABLE FAMILY SUMMARY (new page) =====
+  doc.setFontSize(8);
+  doc.setTextColor(150);
+  doc.text('Are They Real? - Confidential Safety Report - ' + today, pageW / 2, pageH - 10, { align: 'center' });
+  doc.addPage();
+  y = 15;
+
+  // Header for printable page
+  doc.setFillColor(27, 42, 74);
+  doc.rect(0, 0, pageW, 35, 'F');
+  doc.setFontSize(20);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Are They Real? - Summary for Family', pageW / 2, 18, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Print this page and share it with someone you trust.', pageW / 2, 28, { align: 'center' });
+  y = 45;
+
+  doc.setTextColor(30, 30, 46);
+  addWrappedText('This summary was generated by the "Are They Real?" online relationship safety tool on ' + today + '.', 10, 'normal');
+  y += 3;
+
+  // Risk box
+  doc.setFillColor(levelColor[0], levelColor[1], levelColor[2]);
+  doc.roundedRect(marginL, y, contentW, 14, 3, 3, 'F');
+  doc.setFontSize(16);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('RESULT: ' + levelText + ' (Score: ' + a.score + '/' + a.total + ')', pageW / 2, y + 9.5, { align: 'center' });
+  y += 22;
+  doc.setTextColor(30, 30, 46);
+
+  addWrappedText('Scam Type Match: ' + a.profile.name, 11, 'bold');
+  y += 2;
+  addWrappedText(a.profile.description.substring(0, 300) + '...', 9.5, 'normal');
+  y += 4;
+
+  addWrappedText('Key Concerns Identified:', 11, 'bold');
+  y += 2;
+  for (var s = 0; s < Math.min(a.flaggedQuestions.length, 8); s++) {
+    var sq = a.flaggedQuestions[s];
+    var label = sq.answer === 'yes' ? 'YES' : 'UNSURE';
+    addBullet('[' + label + '] ' + sq.q.text, 9.5);
+  }
+  if (a.flaggedQuestions.length > 8) {
+    addWrappedText('...and ' + (a.flaggedQuestions.length - 8) + ' more concerns. See full report for details.', 9, 'italic');
+  }
+  y += 5;
+
+  addWrappedText('What You Can Do To Help:', 11, 'bold');
+  y += 2;
+  addBullet('Listen without judgment. Scam victims often feel ashamed, which makes it harder for them to ask for help.');
+  addBullet('Do not blame them. Professional scammers are skilled manipulators who target kind, trusting people.');
+  addBullet('Help them contact the AARP Fraud Helpline: 1-877-908-3360 (free, weekdays 8am-8pm ET).');
+  addBullet('Offer to help them file a report at reportfraud.ftc.gov or ic3.gov.');
+  addBullet('Help them contact their bank if money has been sent.');
+
+  y += 5;
+  doc.setDrawColor(200, 200, 200);
+  doc.line(marginL, y, pageW - marginR, y);
+  y += 5;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'italic');
+  doc.setTextColor(120, 120, 120);
+  var disclaimer = 'Disclaimer: This report is an educational tool and does not constitute legal or financial advice. If you believe you are a victim of fraud, please contact law enforcement and the resources listed above. This report was generated locally on the user\'s device and was not transmitted, stored, or shared by Are They Real?';
+  var discLines = doc.splitTextToSize(disclaimer, contentW);
+  for (var d = 0; d < discLines.length; d++) {
+    doc.text(discLines[d], marginL, y);
+    y += 4;
+  }
+
+  // Footer on last page
+  doc.setFontSize(8);
+  doc.setTextColor(150);
+  doc.text('Are They Real? - Confidential Safety Report - ' + today, pageW / 2, pageH - 10, { align: 'center' });
+
+  // Save
+  doc.save('AreTheyReal-Safety-Report.pdf');
+}
+
+function resetQuiz() {
+  answers = [];
+  for (var a = 0; a < questions.length; a++) answers.push(null);
+  document.getElementById('results-container').style.display = 'none';
+  document.getElementById('results-container').innerHTML = '';
+  buildQuiz();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showPage(id) {
+  var pages = document.querySelectorAll('.page');
+  for (var p = 0; p < pages.length; p++) pages[p].classList.remove('active');
+  document.getElementById('page-' + id).classList.add('active');
+  var tabIndex = { home: 0, quiz: 1, image: 2, signs: 3, resources: 4 };
+  var tabs = document.querySelectorAll('.tab-btn');
+  for (var t = 0; t < tabs.length; t++) {
+    tabs[t].classList.remove('active');
+    tabs[t].setAttribute('aria-selected', 'false');
+  }
+  tabs[tabIndex[id]].classList.add('active');
+  tabs[tabIndex[id]].setAttribute('aria-selected', 'true');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+updateProgress();
+</script>
+</body>
+</html>
